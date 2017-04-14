@@ -3,7 +3,7 @@ source $VIMRUNTIME/mswin.vim
 behave mswin
 
 " Enable pathogen
-execute pathogen#infect('~/vimfiles/bundle/{}')
+execute pathogen#infect('bundle/{}', '~/vimfiles/bundle/{}')
 
 " Display line and column number in bottom ruler.
 set ruler
@@ -17,7 +17,11 @@ set background=dark
 colorscheme solarized
 
 if has('gui_running')
-	set background=light
+	set background=dark
+    " Hide the toolbar
+    set guioptions-=T
+    set guioptions-=m
+    set guioptions-=r
 else
 	set background=dark
 endif
@@ -26,7 +30,7 @@ endif
 let mapleader=" "  
 
 " Leaderkey + s results in reloading vim config 
-map <leader>s :source ~/.vimrc<CR>  
+map <leader>s :source ~/vimfiles/koenvdb-vimrc.vim<CR>  
 
 " Keep more info in memory to speed things up 
 set hidden 
@@ -41,4 +45,13 @@ set expandtab
 set smartindent 
 set autoindent
 
+autocmd StdinReadPre * let s:std_in=1 
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+set nocompatible 
+filetype off  
+let &runtimepath.=',~/vimfiles/bundle/ale'  
+silent! helptags ALL
+filetype plugin on
